@@ -1,4 +1,4 @@
-import { SirayClient } from './client';
+import type { Siray } from './client';
 import {
   BlockingRunOptions,
   ImageGenerationOptions,
@@ -15,7 +15,7 @@ import {
 } from './task-utils';
 
 export class Image {
-  constructor(private client: SirayClient) {}
+  constructor(private client: Siray) {}
 
   async generate(options: ImageGenerationOptions): Promise<ImageGenerationResponse> {
     return this.client.post('/images/generations', options);

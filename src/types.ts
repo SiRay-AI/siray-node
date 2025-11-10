@@ -1,4 +1,4 @@
-export interface SirayClientOptions {
+export interface SirayOptions {
   apiKey: string;
   baseURL?: string;
   timeout?: number;

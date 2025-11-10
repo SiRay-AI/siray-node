@@ -1,4 +1,4 @@
-import { SirayClient } from './client';
+import type { Siray } from './client';
 import {
   BlockingRunOptions,
   TaskGenerationOptions,
@@ -13,7 +13,7 @@ import {
 } from './task-utils';
 
 export class Video {
-  constructor(private client: SirayClient) {}
+  constructor(private client: Siray) {}
 
   async generateAsync(options: TaskGenerationOptions): Promise<GenerationResponse> {
     const data = await this.client.post('/v1/video/generations', options);

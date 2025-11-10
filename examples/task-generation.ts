@@ -1,14 +1,14 @@
-import { SirayClient } from '../src/index';
+import { Siray } from '../src/index';
 
 async function imageGenerationExample() {
-  const client = new SirayClient({
+  const client = new Siray({
     apiKey: 'your-api-key-here',
   });
 
   try {
     // Asynchronous image generation (recommended)
     console.log('Starting async image generation...');
-    const imageResponse = await client.images.generateAsync({
+    const imageResponse = await client.image.generateAsync({
       model: 'black-forest-labs/flux-1.1-pro-ultra-i2i',
       prompt: 'A beautiful sunset over mountains',
       image: 'https://api.siray.ai/redirect/BhSSiToAIXxA-MuSg68UCpJz_4M60hVkHPakChStzJ2PH7Nq-AgSUO0Wps-OlB4MtO2x7wbrwt7rxmd0get0ITR_5WeSCS8GjNoGDmiQOIjBSXc.jpg', // Optional for image-to-image
@@ -21,7 +21,7 @@ async function imageGenerationExample() {
     const maxAttempts = 30;
 
     while (attempts < maxAttempts) {
-      const status = await client.images.queryTask(imageResponse.task_id);
+      const status = await client.image.queryTask(imageResponse.task_id);
 
       console.log(`Attempt ${attempts + 1}: Status = ${status.status}, Progress = ${status.progress || 'N/A'}`);
 
@@ -41,19 +41,20 @@ async function imageGenerationExample() {
     }
 
   } catch (error) {
-    console.error('Error:', error.message);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('Error:', message);
   }
 }
 
 async function videoGenerationExample() {
-  const client = new SirayClient({
+  const client = new Siray({
     apiKey: 'your-api-key-here',
   });
 
   try {
     // Asynchronous video generation
     console.log('Starting async video generation...');
-    const videoResponse = await client.videos.generateAsync({
+    const videoResponse = await client.video.generateAsync({
       model: 'your-video-model',
       prompt: 'A cat playing piano',
     });
@@ -65,7 +66,7 @@ async function videoGenerationExample() {
     const maxAttempts = 60; // Video generation takes longer
 
     while (attempts < maxAttempts) {
-      const status = await client.videos.queryTask(videoResponse.task_id);
+      const status = await client.video.queryTask(videoResponse.task_id);
 
       console.log(`Attempt ${attempts + 1}: Status = ${status.status}, Progress = ${status.progress || 'N/A'}`);
 
@@ -85,7 +86,8 @@ async function videoGenerationExample() {
     }
 
   } catch (error) {
-    console.error('Error:', error.message);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('Error:', message);
   }
 }
 

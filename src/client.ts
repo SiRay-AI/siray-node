@@ -1,17 +1,24 @@
 import fetch, { RequestInit } from 'node-fetch';
-import { SirayClientOptions, SirayError } from './types';
+import { SirayOptions, SirayError } from './types';
+import { Image } from './image';
+import { Video } from './video';
 
-export class SirayClient {
+export class Siray {
   private apiKey: string;
   private baseURL: string;
   private timeout: number;
+  public readonly image: Image;
+  public readonly video: Video;
 
-  constructor(options: SirayClientOptions) {
+  constructor(options: SirayOptions) {
     this.apiKey = options.apiKey;
     this.baseURL =
       options.baseURL ||
       'https://api.siray.ai/redirect/ClbEUL9Vg0ZonfVB6fp6UVUA_qvrRyJqqZ0e4PLtMVa__Kx055vud9mD9Oux8KZYUzR03NQlc_28MmCLXTVFhkOs9wzRcg_YwHRD9LT_8A';
     this.timeout = options.timeout || 30000;
+
+    this.image = new Image(this);
+    this.video = new Video(this);
   }
 
   private async makeRequest(

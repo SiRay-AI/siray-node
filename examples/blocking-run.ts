@@ -1,13 +1,13 @@
-import { SirayClient } from '../src';
+import { Siray } from '../src';
 
 async function runBlockingImageGeneration() {
-  const client = new SirayClient({
+  const client = new Siray({
     apiKey: 'your-api-key-here',
   });
 
   try {
     console.log('Submitting blocking image generation request...');
-    const status = await client.images.run(
+    const status = await client.image.run(
       {
         model: 'black-forest-labs/flux-1.1-pro-ultra-i2i',
         prompt: 'A cinematic portrait photo of a cyberpunk samurai',
@@ -26,18 +26,19 @@ async function runBlockingImageGeneration() {
       console.log('Image generation finished with status:', status.status);
     }
   } catch (error) {
-    console.error('Blocking run failed:', error instanceof Error ? error.message : error);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('Blocking run failed:', message);
   }
 }
 
 async function runBlockingVideoGeneration() {
-  const client = new SirayClient({
+  const client = new Siray({
     apiKey: 'your-api-key-here',
   });
 
   try {
     console.log('Submitting blocking video generation request...');
-    const status = await client.videos.run(
+    const status = await client.video.run(
       {
         model: 'your-video-model',
         prompt: 'A futuristic drone flying through neon-lit city streets',
@@ -56,7 +57,8 @@ async function runBlockingVideoGeneration() {
       console.log('Video generation finished with status:', status.status);
     }
   } catch (error) {
-    console.error('Blocking run failed:', error instanceof Error ? error.message : error);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('Blocking run failed:', message);
   }
 }
 
