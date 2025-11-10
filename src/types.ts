@@ -10,14 +10,16 @@ export interface SirayError extends Error {
   response?: any;
 }
 
-export class SirayError {
+export class SirayError extends Error {
   constructor(
     message: string,
     public status?: number,
     public code?: string,
     public response?: any
   ) {
+    super(message);
     this.name = 'SirayError';
+    Object.setPrototypeOf(this, SirayError.prototype);
   }
 }
 

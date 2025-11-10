@@ -17,10 +17,14 @@ const client = new Siray({
   apiKey: 'your-api-key-here',
 });
 
+// Optional: turn a local file into a base64 data URL you can pass as the `image` field
+const initImage = await client.loadFromLocal('path/to/image.jpg');
+
 // Asynchronous image generation (recommended)
 const imageResponse = await client.image.generateAsync({
   model: 'black-forest-labs/flux-1.1-pro-ultra-i2i',
   prompt: 'A beautiful sunset over mountains',
+  image: initImage, // Optional reference image
 });
 
 // Asynchronous video generation

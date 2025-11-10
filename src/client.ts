@@ -1,7 +1,21 @@
 import fetch, { RequestInit } from 'node-fetch';
+import { promises as fs } from 'fs';
+import path from 'path';
 import { SirayOptions, SirayError } from './types';
 import { Image } from './image';
 import { Video } from './video';
+
+const MIME_TYPE_MAP: Record<string, string> = {
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png',
+  gif: 'image/gif',
+  webp: 'image/webp',
+  bmp: 'image/bmp',
+  svg: 'image/svg+xml',
+  avif: 'image/avif',
+  heic: 'image/heic',
+};
 
 export class Siray {
   private apiKey: string;
@@ -14,7 +28,7 @@ export class Siray {
     this.apiKey = options.apiKey;
     this.baseURL =
       options.baseURL ||
-      'https://api.siray.ai/redirect/ClbEUL9Vg0ZonfVB6fp6UVUA_qvrRyJqqZ0e4PLtMVa__Kx055vud9mD9Oux8KZYUzR03NQlc_28MmCLXTVFhkOs9wzRcg_YwHRD9LT_8A';
+      'https://api.siray.ai';
     this.timeout = options.timeout || 30000;
 
     this.image = new Image(this);
@@ -92,5 +106,31 @@ export class Siray {
     return this.makeRequest(endpoint, {
       method: 'GET',
     });
+  }
+
+  public async loadFromLocal(filePath: string): Promise<string> {
+    if (!filePath) {
+      throw new SirayError('File path must be a non-empty string');
+    }
+
+    const resolvedPath = path.resolve(filePath);
+    const extension = path.extname(resolvedPath).replace('.', '').toLowerCase();
+    const mimeType = MIME_TYPE_MAP[extension];
+
+    if (!mimeType) {
+      throw new SirayError(`Unsupported or unknown file type: ${extension || 'unknown'}`);
+    }
+
+    try {
+      const fileBuffer = await fs.readFile(resolvedPath);
+      const base64Content = fileBuffer.toString('base64');
+      return `data:${mimeType};base64,${base64Content}`;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new SirayError(`Failed to load local file: ${error.message}`);
+      }
+
+      throw new SirayError('Failed to load local file: Unknown error object received');
+    }
   }
 }
